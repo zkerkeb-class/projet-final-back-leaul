@@ -14,9 +14,20 @@ router.get('/', async (req, res) => {
 
 router.get('/random', async (req, res) => {
   try {
-    const [alert] = await Alert.aggregate([{ $sample: { size: 1 } }]);
+    const pipeline = [];
+    
+    // Si une difficulté est passée, on filtre d'abord
+    if (req.query.difficulte && ['facile', 'moyen', 'difficile'].includes(req.query.difficulte)) {
+      pipeline.push({ $match: { difficulte: req.query.difficulte } });
+    }
+    
+    // Ensuite on prend une carte au hasard
+    pipeline.push({ $sample: { size: 1 } });
+
+    const [alert] = await Alert.aggregate(pipeline);
+    
     if (!alert) {
-      return res.status(404).json({ error: 'Aucune carte disponible' });
+      return res.status(404).json({ error: 'Aucune carte disponible pour cette difficulté' });
     }
     res.json(alert);
   } catch (error) {

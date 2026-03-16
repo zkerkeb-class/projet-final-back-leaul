@@ -6,6 +6,9 @@ const dotenv = require('dotenv');
 dotenv.config();
 
 const alertsRouter = require('./routes/alerts');
+const authRouter = require('./routes/auth');
+const trainingsRouter = require('./routes/trainings');
+const authMiddleware = require('./middleware/authMiddleware');
 
 const app = express();
 
@@ -17,16 +20,16 @@ app.use(
 );
 app.use(express.json());
 
-const PORT = process.env.PORT || 4000;
+const PORT = process.env.PORT || 4001;
 const MONGODB_URI =
-  process.env.MONGODB_URI || 'mongodb://127.0.0.1:27017/soc-database';
+  process.env.MONGODB_URI || 'mongodb://127.0.0.1:27017/soc_training';
 
 mongoose
   .connect(MONGODB_URI, {
     serverSelectionTimeoutMS: 5000
   })
   .then(() => {
-    console.log('✅ Connecté à MongoDB');
+    console.log(`✅ Connecté à MongoDB : ${MONGODB_URI}`);
   })
   .catch((error) => {
     console.error('❌ Erreur de connexion MongoDB:', error.message);
@@ -36,7 +39,9 @@ app.get('/', (req, res) => {
   res.json({ message: 'API SOC en ligne' });
 });
 
-app.use('/alerts', alertsRouter);
+app.use('/auth', authRouter);
+app.use('/alerts', authMiddleware, alertsRouter);
+app.use('/trainings', authMiddleware, trainingsRouter);
 
 app.use((req, res) => {
   res.status(404).json({ error: 'Route non trouvée' });
