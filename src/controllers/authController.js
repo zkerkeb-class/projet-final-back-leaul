@@ -24,15 +24,10 @@ const register = async (req, res) => {
 
     res.status(201).json({ token, email: user.email });
   } catch (error) {
-    const fs = require('fs');
-    const logData = `[${new Date().toISOString()}] Registration error: ${error.message}\nStack: ${error.stack}\nBody: ${JSON.stringify(req.body)}\n\n`;
-    fs.appendFileSync('c:/Users/932252817/Documents/ECE/ING4-APP-Cyber/Semestre 2/Technologies Web/Projets/projet-final-back-leaul/debug_auth.log', logData);
-
     console.error('Registration error details:', error);
     res.status(500).json({
-      error: 'Erreur lors de l\'inscription',
-      details: error.message,
-      stack: error.stack
+      error: "Erreur lors de l'inscription",
+      details: error.message
     });
   }
 };
