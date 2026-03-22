@@ -1,3 +1,10 @@
+Démo ici : 
+https://youtube.com/shorts/zr5aU35Uh08?feature=share
+
+Précisions : 
+Dans le main se situe le body de l'application, dans la branche authentification le body + la page de connexion et création de compte. 
+Merci ! 
+
 ## API SOC - Cartes d'alertes
 
 Backend Node/Express pour une appli mobile (Expo/React Native) permettant de s'entraîner à la réponse à incidents à partir de cartes stockées dans MongoDB.
